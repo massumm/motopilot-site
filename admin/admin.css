@@ -18,6 +18,12 @@
 
 * { box-sizing: border-box; }
 
+/* The hidden attribute sets display:none through a UA rule, which any class
+   setting display beats. .login and .shell both set display:grid, so without
+   this, hiding either of them did nothing: after signing in the login card
+   stayed put and the dashboard was laid out below it, off screen. */
+[hidden] { display: none !important; }
+
 body {
   margin: 0;
   background: var(--bg);
