@@ -75,8 +75,36 @@ header {
 /* ------------------------------------------------------------------ hero */
 
 .hero {
-  background: linear-gradient(135deg, #4a7a1c 0%, #1e3111 48%, var(--bg) 100%);
+  position: relative;
+  overflow: hidden;
+  /* Two layers rather than one ramp. A single diagonal gradient stretched
+     across a wide viewport lands mid-olive everywhere, which flattens the
+     page and leaves the phone with nothing to sit against. The glow is
+     placed where the phone is, so the device reads as lit. */
+  background:
+    radial-gradient(
+      circle at 72% 42%,
+      rgba(122, 190, 48, 0.26) 0%,
+      rgba(122, 190, 48, 0.05) 38%,
+      transparent 62%
+    ),
+    linear-gradient(150deg, #2d4a12 0%, #16220f 42%, var(--bg) 78%);
   border-bottom: 1px solid var(--outline);
+}
+
+/* A hairline of accent along the top edge, the width of the page. Cheap, and
+   it stops the header and the hero reading as one undifferentiated block. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(182, 242, 75, 0.5),
+    transparent
+  );
 }
 
 .hero .wrap { padding-top: 76px; padding-bottom: 84px; }
@@ -302,4 +330,151 @@ footer a:hover { color: var(--text); }
   section { padding: 56px 0; }
   .hero .wrap { padding-top: 52px; padding-bottom: 60px; }
   .btn { flex: 1 1 100%; text-align: center; }
+}
+
+/* ------------------------------------------------------------ hero layout */
+
+/* Two columns once there is room, because the hero was a wall of text with
+   an empty half beside it. Below that the phone goes under the copy rather
+   than beside it, where it would be too small to read. */
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 48px;
+  align-items: center;
+}
+
+.hero-copy { min-width: 0; }
+
+/* -------------------------------------------------------- the phone itself
+
+   Drawn, not screenshotted. It stays sharp at any size, weighs a fraction of
+   a PNG, and cannot go stale when the app's palette moves — the colours here
+   are the same tokens the app uses. */
+
+.phone {
+  justify-self: center;
+  width: 100%;
+  max-width: 290px;
+  aspect-ratio: 9 / 19.5;
+  border-radius: 34px;
+  padding: 9px;
+  background: linear-gradient(160deg, #39421f, #11140f 60%);
+  border: 1px solid var(--outline);
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(182, 242, 75, 0.09);
+}
+
+.screen {
+  height: 100%;
+  border-radius: 26px;
+  background: var(--bg);
+  padding: 14px 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  overflow: hidden;
+}
+
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  color: var(--muted);
+  padding: 0 4px;
+}
+
+.statusbar .dots {
+  width: 34px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--surface-2);
+}
+
+.hero-card {
+  background: linear-gradient(145deg, #3c6417, #1b2a12 70%);
+  border-radius: 18px;
+  padding: 13px 14px 10px;
+}
+
+.hc-label { font-size: 9.5px; color: #c3d6b0; letter-spacing: 0.3px; }
+
+.hc-value {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-top: 1px;
+}
+
+.hc-value small { font-size: 12px; font-weight: 600; color: #cfe0bd; }
+
+.hc-delta { font-size: 9.5px; color: var(--lime); margin-top: 2px; }
+
+.spark {
+  width: 100%;
+  height: 24px;
+  margin-top: 6px;
+  fill: none;
+  stroke: var(--lime);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  flex: 1;
+  min-height: 0;
+}
+
+.tile {
+  background: var(--surface);
+  border: 1px solid var(--outline);
+  border-radius: 13px;
+  padding: 9px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tile b { font-size: 10.5px; font-weight: 600; }
+.tile span { font-size: 8.5px; color: var(--muted); }
+
+/* One tile carries the accent, exactly as the app's ride tile does. */
+.tile.lime { background: var(--lime); border-color: var(--lime); }
+.tile.lime b { color: var(--on-lime); }
+.tile.lime span { color: rgba(12, 26, 0, 0.72); }
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px 2px;
+}
+
+.navbar span {
+  width: 17px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--surface-2);
+}
+
+.navbar span.on { background: var(--lime); width: 24px; }
+
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .phone { max-width: 250px; }
+}
+
+@media (max-width: 620px) {
+  /* The phone is decoration on a phone: the reader is already holding one,
+     and it would push the download button below the fold. */
+  .phone { display: none; }
 }
