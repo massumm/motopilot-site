@@ -3,97 +3,197 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Camera admin — MotoPilot</title>
+<title>MotoPilot Admin</title>
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="../assets/icon.png">
-<link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="admin.css">
 </head>
 <body>
 
-<header>
-  <div class="wrap bar">
+<!-- ------------------------------------------------------------- sign in -->
+<div id="login" class="login">
+  <form class="login-card" id="login-form">
     <img src="../assets/icon.png" alt="">
-    <strong>Camera admin</strong>
-    <nav>
-      <span id="who" class="muted"></span>
-      <a href="#" id="signout" hidden>Sign out</a>
-    </nav>
-  </div>
-</header>
+    <h1>MotoPilot Admin</h1>
+    <p class="muted">Sign in to manage cameras, notifications and app content.</p>
 
-<!-- Signed out -->
-<section id="gate" class="wrap pad">
-  <h2>Sign in</h2>
-  <p class="muted">
-    Only accounts on the admin list can publish cameras. Everyone else — including
-    every rider using the app — is refused by the database itself, not by this page.
-  </p>
-  <button class="btn primary" id="signin">Sign in with Google</button>
-</section>
+    <label>Email
+      <input id="email" type="email" autocomplete="username" required>
+    </label>
+    <label>Password
+      <input id="password" type="password" autocomplete="current-password" required>
+    </label>
 
-<!-- Signed in but not an admin -->
-<section id="denied" class="wrap pad" hidden>
-  <h2>Not on the admin list</h2>
-  <p class="muted">
-    You are signed in, but this account cannot publish cameras. Add the id below
-    to <code>/admins</code> in the database to grant access.
-  </p>
-  <pre id="uid" class="uid"></pre>
-</section>
+    <button class="btn primary wide" type="submit" id="login-btn">Sign in</button>
+    <p class="error" id="login-error" hidden></p>
+  </form>
+</div>
 
-<!-- The tool -->
-<main id="tool" hidden>
-  <div id="map"></div>
+<!-- ----------------------------------------------------------- dashboard -->
+<div id="shell" class="shell" hidden>
 
-  <aside class="panel">
-    <div class="panel-head">
-      <h2>Verified cameras</h2>
-      <span class="muted" id="count">—</span>
+  <nav class="rail">
+    <div class="rail-logo"><img src="../assets/icon.png" alt="MotoPilot"></div>
+    <button class="rail-btn is-on" data-section="cameras" title="Cameras">
+      <svg viewBox="0 0 24 24"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="3.2"/></svg>
+    </button>
+    <button class="rail-btn" data-section="notifications" title="Notifications">
+      <svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+    </button>
+    <button class="rail-btn" data-section="content" title="App content">
+      <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+    </button>
+    <div class="rail-foot">
+      <button class="rail-btn" id="signout" title="Sign out">
+        <svg viewBox="0 0 24 24"><path d="M14 8V5H5v14h9v-3"/><path d="M10 12h10m0 0-3-3m3 3-3 3"/></svg>
+      </button>
     </div>
+  </nav>
 
-    <p class="muted small">
-      Click the map to place a camera. Drag a marker to move it. These are what
-      every rider downloads and gets warned about, so a wrong one warns everybody.
-    </p>
-
-    <div id="editor" hidden>
-      <label>Name <input id="f-name" type="text" placeholder="Farmgate crossing"></label>
-      <label>Type
-        <select id="f-type">
-          <option value="speed">Speed</option>
-          <option value="traffic">Traffic</option>
-          <option value="redLight">Red light</option>
-          <option value="security">Security</option>
-          <option value="checkpoint">Checkpoint</option>
-          <option value="other">Other</option>
-        </select>
-      </label>
-      <label>Speed limit (km/h) <input id="f-limit" type="number" min="0" max="200" placeholder="optional"></label>
-      <div class="row">
-        <label class="half">Latitude <input id="f-lat" type="number" step="0.000001"></label>
-        <label class="half">Longitude <input id="f-lng" type="number" step="0.000001"></label>
+  <main class="main">
+    <header class="top">
+      <div>
+        <h1 id="title">Cameras</h1>
+        <p class="muted" id="subtitle">Every rider downloads these and gets warned about them.</p>
       </div>
-      <label class="check">
-        <input id="f-bidir" type="checkbox" checked>
-        Watches both directions
-      </label>
-      <div class="actions">
-        <button class="btn primary" id="save">Save</button>
-        <button class="btn ghost" id="cancel">Cancel</button>
-        <button class="btn danger" id="delete" hidden>Delete</button>
+      <div class="top-right">
+        <span class="chip" id="who"></span>
+        <button class="btn primary" id="primary-action">Add camera</button>
       </div>
-    </div>
+    </header>
 
-    <ul id="list" class="list"></ul>
+    <!-- ------------------------------------------------------- cameras -->
+    <section class="panel-section" data-panel="cameras">
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-label">Published</span>
+          <strong id="s-published">—</strong>
+          <span class="muted small">live to every rider</span>
+        </div>
+        <div class="stat lime">
+          <span class="stat-label">Submitted by riders</span>
+          <strong id="s-pending">—</strong>
+          <span class="muted small">awaiting your review</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Last published</span>
+          <strong id="s-when">—</strong>
+          <span class="muted small">most recent change</span>
+        </div>
+      </div>
 
-    <div class="panel-foot">
-      <button class="btn ghost" id="export">Download as JSON</button>
-      <span id="status" class="muted small"></span>
-    </div>
-  </aside>
-</main>
+      <div class="split">
+        <div id="map"></div>
+        <aside class="side">
+          <div id="editor" hidden>
+            <h3>Camera</h3>
+            <label>Name <input id="f-name" type="text" placeholder="Farmgate crossing"></label>
+            <label>Type
+              <select id="f-type">
+                <option value="speed">Speed</option>
+                <option value="traffic">Traffic</option>
+                <option value="redLight">Red light</option>
+                <option value="security">Security</option>
+                <option value="checkpoint">Checkpoint</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
+            <label>Speed limit (km/h) <input id="f-limit" type="number" min="0" max="200" placeholder="optional"></label>
+            <div class="row">
+              <label class="half">Latitude <input id="f-lat" type="number" step="0.000001"></label>
+              <label class="half">Longitude <input id="f-lng" type="number" step="0.000001"></label>
+            </div>
+            <label class="check"><input id="f-bidir" type="checkbox" checked> Watches both directions</label>
+            <div class="actions">
+              <button class="btn primary" id="save">Save</button>
+              <button class="btn ghost" id="cancel">Cancel</button>
+              <button class="btn danger" id="delete" hidden>Delete</button>
+            </div>
+          </div>
+
+          <h3 class="list-head">Published <span class="muted" id="count"></span></h3>
+          <ul id="list" class="list"></ul>
+          <button class="btn ghost wide" id="export">Download as JSON</button>
+        </aside>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------- notifications -->
+    <section class="panel-section" data-panel="notifications" hidden>
+      <div class="two-col">
+        <div class="card">
+          <h3>Compose</h3>
+          <label>Title <input id="n-title" type="text" maxlength="60" placeholder="New cameras added near Dhaka"></label>
+          <label>Message <textarea id="n-body" rows="4" maxlength="240" placeholder="Open the camera map and tap download to get them."></textarea></label>
+          <label>Show until
+            <input id="n-until" type="date">
+          </label>
+          <div class="actions">
+            <button class="btn primary" id="n-publish">Publish to app</button>
+            <button class="btn ghost" id="n-clear">Clear current</button>
+          </div>
+          <p class="muted small" id="n-status"></p>
+        </div>
+
+        <div class="card">
+          <h3>Live now</h3>
+          <div id="n-current" class="preview muted">Nothing published.</div>
+
+          <h3 style="margin-top:24px">How this reaches riders</h3>
+          <p class="muted small">
+            Publishing writes the message to the database. The app reads it on
+            launch and shows it as a banner — so it arrives whenever the rider
+            next opens MotoPilot, not as a system notification.
+          </p>
+          <p class="muted small">
+            A true push notification has to be sent by a server holding a
+            credential. Putting that credential in this page would let anyone
+            who views the source notify every user, so it is not here. Sending
+            one needs either the Firebase Console, or a Cloud Function on the
+            Blaze plan that watches this same message.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------- content -->
+    <section class="panel-section" data-panel="content" hidden>
+      <div class="two-col">
+        <div class="card">
+          <h3>Minimum version</h3>
+          <p class="muted small">
+            Installs below this versionCode are blocked and shown the update
+            screen. Set it to 0 to block nobody. Raising it stops a broken
+            release without shipping another one &mdash; and a wrong value here
+            locks every rider out, so it is deliberately a number you type.
+          </p>
+          <label>Minimum versionCode <input id="c-min" type="number" min="0"></label>
+          <label>Message shown when blocked
+            <textarea id="c-msg" rows="3" maxlength="300"></textarea>
+          </label>
+          <div class="actions">
+            <button class="btn primary" id="c-save">Save</button>
+          </div>
+          <p class="muted small" id="c-status"></p>
+        </div>
+
+        <div class="card">
+          <h3>Current</h3>
+          <dl class="kv">
+            <dt>Minimum versionCode</dt><dd id="c-cur-min">—</dd>
+            <dt>Latest released</dt><dd id="c-cur-latest">12 (1.7.0)</dd>
+          </dl>
+          <p class="muted small">
+            The app fails open: a rider who cannot read this config keeps using
+            the app. Blocking on doubt would take it away from someone with no
+            signal, for a problem they do not have.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script type="module" src="admin.js"></script>

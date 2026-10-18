@@ -1,127 +1,276 @@
-/* The admin tool. Shares the site's tokens so it looks like the same product,
-   but it is a working surface rather than a page to read: denser, and the
-   map takes whatever height is left. */
+/* MotoPilot admin.
+   Standalone rather than built on the marketing site's stylesheet: that one
+   is tuned for reading a page, this is a working surface. Same palette, so
+   they still read as one product. */
 
-.pad { padding: 48px 16px 64px; }
+:root {
+  --lime: #b6f24b;
+  --on-lime: #0c1a00;
+  --bg: #0c0f0b;
+  --surface: #13180f;
+  --surface-2: #1b2216;
+  --text: #e7eee1;
+  --muted: #9aa691;
+  --outline: #2d3626;
+  --danger: #ff8a7a;
+  --rail: 68px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h3 { letter-spacing: -0.4px; }
 .muted { color: var(--muted); }
-.small { font-size: 14px; }
+.small { font-size: 13px; line-height: 1.55; }
+.error { color: var(--danger); font-size: 13.5px; }
 
-.uid {
+/* --------------------------------------------------------------- sign in */
+
+.login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(182, 242, 75, 0.1), transparent 55%),
+    var(--bg);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
   background: var(--surface);
   border: 1px solid var(--outline);
-  border-radius: 10px;
-  padding: 12px 14px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 13px;
-  overflow-x: auto;
+  border-radius: 22px;
+  padding: 34px 30px 30px;
 }
 
-main#tool {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  height: calc(100vh - 66px);
-}
+.login-card img { width: 46px; height: 46px; border-radius: 12px; }
+.login-card h1 { font-size: 23px; margin: 16px 0 4px; }
+.login-card p { margin: 0 0 20px; font-size: 14px; }
 
-#map { height: 100%; background: var(--surface); }
+/* ------------------------------------------------------------- controls */
 
-/* Leaflet ships a light interface; these keep it legible on the dark page. */
-.leaflet-container { background: #10140e; }
-.leaflet-popup-content-wrapper,
-.leaflet-popup-tip { background: var(--surface); color: var(--text); }
-.leaflet-bar a { background: var(--surface); color: var(--text);
-  border-bottom-color: var(--outline); }
-.leaflet-bar a:hover { background: var(--surface-2); }
-
-.panel {
-  border-left: 1px solid var(--outline);
-  background: var(--bg);
-  display: flex;
-  flex-direction: column;
-  padding: 18px 18px 0;
-  overflow-y: auto;
-}
-
-.panel-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.panel h2 { margin: 0 0 4px; font-size: 19px; letter-spacing: -0.3px; }
-
-.panel label {
+label {
   display: block;
   font-size: 13px;
   color: var(--muted);
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
-.panel input,
-.panel select {
+input, select, textarea {
   width: 100%;
-  margin-top: 5px;
-  padding: 9px 11px;
-  border-radius: 10px;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 11px;
   border: 1px solid var(--outline);
-  background: var(--surface);
+  background: var(--bg);
   color: var(--text);
+  font: inherit;
   font-size: 14.5px;
 }
 
-.panel .row { display: flex; gap: 10px; }
-.panel .half { flex: 1; }
+textarea { resize: vertical; }
 
-.panel label.check {
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--lime);
+}
+
+label.check {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 9px;
   color: var(--text);
+  margin-top: 16px;
 }
 
-.panel label.check input { width: auto; margin: 0; }
+label.check input { width: auto; margin: 0; }
 
-.actions { display: flex; gap: 8px; margin: 18px 0 6px; flex-wrap: wrap; }
-.actions .btn { padding: 10px 18px; font-size: 14.5px; }
+.row { display: flex; gap: 10px; }
+.half { flex: 1; }
 
-.btn.danger {
+.btn {
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  padding: 10px 22px;
+  font: inherit;
+  font-weight: 650;
+  font-size: 14.5px;
+  cursor: pointer;
+}
+
+.btn.primary { background: var(--lime); color: var(--on-lime); }
+.btn.ghost { background: transparent; color: var(--text); border-color: var(--outline); }
+.btn.ghost:hover { border-color: var(--text); }
+.btn.danger { background: transparent; color: var(--danger); border-color: #5a2a22; margin-left: auto; }
+.btn.wide { width: 100%; margin-top: 20px; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.actions { display: flex; gap: 9px; margin-top: 18px; flex-wrap: wrap; }
+
+/* ------------------------------------------------------------- the shell */
+
+.shell { display: grid; grid-template-columns: var(--rail) 1fr; min-height: 100vh; }
+
+.rail {
+  background: #090b08;
+  border-right: 1px solid var(--outline);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 0;
+}
+
+.rail-logo img { width: 34px; height: 34px; border-radius: 10px; margin-bottom: 10px; }
+.rail-foot { margin-top: auto; }
+
+.rail-btn {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 13px;
   background: transparent;
-  border: 1.5px solid #c0392b;
-  color: #ff8a7a;
-  margin-left: auto;
+  color: var(--muted);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
 }
 
-.list { list-style: none; margin: 14px 0 0; padding: 0; }
+.rail-btn svg {
+  width: 20px; height: 20px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.rail-btn:hover { background: var(--surface-2); color: var(--text); }
+.rail-btn.is-on { background: var(--lime); color: var(--on-lime); }
+
+.main { padding: 26px 28px 40px; min-width: 0; }
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.top h1 { font-size: 30px; margin: 0 0 2px; }
+.top p { margin: 0; font-size: 14px; }
+.top-right { display: flex; align-items: center; gap: 12px; }
+
+.chip {
+  background: var(--surface);
+  border: 1px solid var(--outline);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------------- pieces */
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 18px; }
+
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--outline);
+  border-radius: 18px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.stat strong { font-size: 30px; font-weight: 700; letter-spacing: -1px; line-height: 1.1; }
+.stat-label { font-size: 12.5px; color: var(--muted); }
+.stat.lime { background: var(--lime); border-color: var(--lime); }
+.stat.lime .stat-label, .stat.lime .muted { color: rgba(12, 26, 0, 0.72); }
+.stat.lime strong { color: var(--on-lime); }
+
+.split { display: grid; grid-template-columns: 1fr 360px; gap: 14px; }
+
+#map {
+  height: 62vh;
+  min-height: 420px;
+  border-radius: 18px;
+  border: 1px solid var(--outline);
+  background: var(--surface);
+}
+
+.leaflet-container { background: #10140e; border-radius: 17px; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface); color: var(--text); }
+.leaflet-bar a { background: var(--surface); color: var(--text); border-bottom-color: var(--outline); }
+.leaflet-bar a:hover { background: var(--surface-2); }
+
+.side {
+  background: var(--surface);
+  border: 1px solid var(--outline);
+  border-radius: 18px;
+  padding: 18px;
+  max-height: 62vh;
+  overflow-y: auto;
+}
+
+.side h3 { font-size: 16px; margin: 0 0 4px; }
+.list-head { margin-top: 20px !important; }
+
+.list { list-style: none; margin: 10px 0 16px; padding: 0; }
 
 .list li {
   padding: 10px 12px;
   border: 1px solid var(--outline);
-  border-radius: 11px;
+  border-radius: 12px;
   margin-bottom: 7px;
   cursor: pointer;
+}
+
+.list li:hover { background: var(--surface-2); }
+.list li b { display: block; font-size: 14px; font-weight: 600; }
+.list li span { color: var(--muted); font-size: 12.5px; }
+
+.two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--outline);
+  border-radius: 18px;
+  padding: 20px 22px 24px;
+}
+
+.card h3 { font-size: 17px; margin: 0 0 6px; }
+
+.preview {
+  background: var(--bg);
+  border: 1px solid var(--outline);
+  border-radius: 13px;
+  padding: 14px 16px;
   font-size: 14px;
 }
 
-.list li:hover { background: var(--surface); }
-.list li b { display: block; font-weight: 600; }
-.list li span { color: var(--muted); font-size: 12.5px; }
+.preview b { display: block; color: var(--text); margin-bottom: 3px; }
 
-.panel-foot {
-  position: sticky;
-  bottom: 0;
-  background: var(--bg);
-  border-top: 1px solid var(--outline);
-  margin-top: auto;
-  padding: 12px 0 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; margin: 10px 0 18px; }
+.kv dt { color: var(--muted); font-size: 13.5px; }
+.kv dd { margin: 0; font-weight: 600; }
+
+@media (max-width: 1000px) {
+  .split { grid-template-columns: 1fr; }
+  .side { max-height: none; }
+  #map { height: 50vh; }
 }
 
-@media (max-width: 900px) {
-  main#tool { grid-template-columns: 1fr; height: auto; }
-  #map { height: 55vh; }
-  .panel { border-left: 0; border-top: 1px solid var(--outline); }
+@media (max-width: 620px) {
+  .main { padding: 18px 16px 32px; }
+  .top h1 { font-size: 24px; }
 }
