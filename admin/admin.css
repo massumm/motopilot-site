@@ -1,0 +1,127 @@
+/* The admin tool. Shares the site's tokens so it looks like the same product,
+   but it is a working surface rather than a page to read: denser, and the
+   map takes whatever height is left. */
+
+.pad { padding: 48px 16px 64px; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+
+.uid {
+  background: var(--surface);
+  border: 1px solid var(--outline);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  overflow-x: auto;
+}
+
+main#tool {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  height: calc(100vh - 66px);
+}
+
+#map { height: 100%; background: var(--surface); }
+
+/* Leaflet ships a light interface; these keep it legible on the dark page. */
+.leaflet-container { background: #10140e; }
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip { background: var(--surface); color: var(--text); }
+.leaflet-bar a { background: var(--surface); color: var(--text);
+  border-bottom-color: var(--outline); }
+.leaflet-bar a:hover { background: var(--surface-2); }
+
+.panel {
+  border-left: 1px solid var(--outline);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  padding: 18px 18px 0;
+  overflow-y: auto;
+}
+
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panel h2 { margin: 0 0 4px; font-size: 19px; letter-spacing: -0.3px; }
+
+.panel label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 12px;
+}
+
+.panel input,
+.panel select {
+  width: 100%;
+  margin-top: 5px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  border: 1px solid var(--outline);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14.5px;
+}
+
+.panel .row { display: flex; gap: 10px; }
+.panel .half { flex: 1; }
+
+.panel label.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  color: var(--text);
+}
+
+.panel label.check input { width: auto; margin: 0; }
+
+.actions { display: flex; gap: 8px; margin: 18px 0 6px; flex-wrap: wrap; }
+.actions .btn { padding: 10px 18px; font-size: 14.5px; }
+
+.btn.danger {
+  background: transparent;
+  border: 1.5px solid #c0392b;
+  color: #ff8a7a;
+  margin-left: auto;
+}
+
+.list { list-style: none; margin: 14px 0 0; padding: 0; }
+
+.list li {
+  padding: 10px 12px;
+  border: 1px solid var(--outline);
+  border-radius: 11px;
+  margin-bottom: 7px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.list li:hover { background: var(--surface); }
+.list li b { display: block; font-weight: 600; }
+.list li span { color: var(--muted); font-size: 12.5px; }
+
+.panel-foot {
+  position: sticky;
+  bottom: 0;
+  background: var(--bg);
+  border-top: 1px solid var(--outline);
+  margin-top: auto;
+  padding: 12px 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  main#tool { grid-template-columns: 1fr; height: auto; }
+  #map { height: 55vh; }
+  .panel { border-left: 0; border-top: 1px solid var(--outline); }
+}
