@@ -25,117 +25,102 @@
     <a class="back" href="/">&larr; Back</a>
 
     <h1>Privacy policy</h1>
-    <p class="stamp">Last updated: 29 September 2026</p>
+    <p class="stamp">Last updated: 18 October 2026</p>
 
     <div class="note">
-      <p>
-        MotoPilot keeps everything on your phone. There is no account to
-        create, no server to sign in to, and nothing is sent to us — because
-        there is no "us" on the other end. This page explains that in full,
-        because Google Play requires a policy even from an app that collects
-        nothing.
-      </p>
+      <p>MotoPilot keeps everything on your phone unless you ask it not to. There is no account to create and no sign-in. Two features reach the internet, both of them optional and both off until you use them: backup, and the shared camera list. Everything else works exactly as it reads — on your phone, with no signal.</p>
     </div>
 
     <h2>What MotoPilot stores</h2>
+
     <p>All of it is written to a database on your own phone:</p>
+
     <ul>
       <li>Your bikes, their odometer readings, and which one is active</li>
       <li>Fuel entries: date, litres, price, station and notes</li>
       <li>Your calculated mileage, spending and statistics</li>
       <li>Rides: distance, speed, duration and the GPS route</li>
-      <li>
-        Documents: registration, tax token, insurance, licence and any scans
-        or photos you add
-      </li>
+      <li>Documents: registration, tax token, insurance, licence and any scans or photos you add</li>
       <li>Your settings, such as language and theme</li>
     </ul>
-    <p>
-      Nothing in that list is uploaded anywhere. Uninstalling MotoPilot deletes
-      all of it, and there is no copy elsewhere to ask us to delete.
-    </p>
+
+    <p>None of it is uploaded unless you tap "Back up now". Uninstalling MotoPilot deletes everything on the phone; if you have backed up, see <strong>Backup</strong> below for what is kept and how to remove it.</p>
 
     <h2>Location</h2>
-    <p>
-      MotoPilot uses your location for two things, both while you are using the
-      app:
-    </p>
+
+    <p>MotoPilot uses your location for two things, both while you are using the app:</p>
+
     <ul>
       <li>Recording the route, distance and speed of a ride you started</li>
       <li>Warning you about traffic cameras ahead of you on the road</li>
     </ul>
-    <p>
-      Location is read only while a ride is recording, and a recording ride
-      always shows a notification, so you can tell at a glance when the app is
-      using GPS. MotoPilot does not request background location access at all:
-      close the ride and the app stops reading your position.
-    </p>
+
+    <p>Location is read only while a ride is recording, and a recording ride always shows a notification, so you can tell at a glance when the app is using GPS. MotoPilot does not request background location access at all: close the ride and the app stops reading your position.</p>
+
     <p>Your routes are stored on your phone and are never transmitted.</p>
 
     <h2>Microphone</h2>
-    <p>
-      The intercom uses your microphone to send your voice to one other rider's
-      phone over a Wi-Fi hotspot the two of you are sharing. While it is
-      running:
-    </p>
+
+    <p>The intercom uses your microphone to send your voice to one other rider's phone over a Wi-Fi hotspot the two of you are sharing. While it is running:</p>
+
     <ul>
       <li>Audio goes directly from your phone to theirs over the local network</li>
       <li>Nothing passes through the internet or any server</li>
-      <li>
-        Nothing is recorded or saved — audio exists only for the moment it is
-        played
-      </li>
+      <li>Nothing is recorded or saved — audio exists only for the moment it is played</li>
     </ul>
-    <p>
-      The microphone is used only while you have an intercom room open. Leave
-      the room and it stops.
-    </p>
+
+    <p>The microphone is used only while you have an intercom room open. Leave the room and it stops.</p>
 
     <h2>Camera and files</h2>
-    <p>
-      If you photograph a document or pick an existing scan, that image is
-      copied into MotoPilot's private storage on your phone. Documents you mark
-      as private are encrypted on the device using AES-GCM, with the key held
-      in the Android Keystore, and opening them requires your fingerprint or
-      your phone's lock screen.
-    </p>
+
+    <p>If you photograph a document or pick an existing scan, that image is copied into MotoPilot's private storage on your phone. Documents you mark as private are encrypted on the device using AES-GCM, with the key held in the Android Keystore, and opening them requires your fingerprint or your phone's lock screen.</p>
 
     <h2>Biometrics</h2>
-    <p>
-      MotoPilot asks Android to verify your fingerprint or face. Android does
-      the checking and answers yes or no. MotoPilot never sees, receives or
-      stores your biometric data.
-    </p>
+
+    <p>MotoPilot asks Android to verify your fingerprint or face. Android does the checking and answers yes or no. MotoPilot never sees, receives or stores your biometric data.</p>
+
+    <h2>Backup</h2>
+
+    <p>Backup is off until you open Settings → Backup and tap "Back up now". Nothing is uploaded before that, and nothing is uploaded automatically afterwards.</p>
+
+    <p>When you do, a copy of your <strong>bikes, fuel entries and rides</strong> is sent to Google Firebase Realtime Database, so a lost or reset phone does not take your fuel history with it.</p>
+
+    <p>What is <strong>not</strong> sent:</p>
+
+    <ul>
+      <li><strong>Your documents and their scans.</strong> They are encrypted on the phone with a key held in the Android Keystore, and that key cannot leave the phone.</li>
+      <li><strong>Your ride routes.</strong> The GPS trace of each ride stays on the phone.</li>
+    </ul>
+
+    <p>To make a backup reachable only by your phone, the app asks Firebase for an anonymous identifier. It is not an account: there is no email, no password and no name attached, and it identifies the installation rather than you. If you uninstall the app, that identifier is gone and the backup becomes unreachable — which also means nobody else can reach it.</p>
+
+    <p>To delete a backup, tap "Back up now" with an empty app, or email the address below and we will remove it.</p>
+
+    <h2>Shared camera list</h2>
+
+    <p>The camera warnings need a list of camera locations, which the app downloads when you tap "Download latest cameras". That download sends nothing about you.</p>
+
+    <p>If you mark a camera on the map, that mark is offered to the shared list so other riders can be warned too. What is sent is the <strong>coordinates, the kind of camera, the time, and the anonymous identifier described above</strong> — nothing about your bike, your fuel, your rides or your routes. Marks cannot be read back by the app, by other riders, or through any public interface.</p>
 
     <h2>Network use</h2>
-    <p>
-      MotoPilot requests internet and Wi-Fi permissions for one purpose: the
-      intercom's local-network audio between two phones on the same hotspot.
-      The app has no backend, sends no telemetry, contains no advertising, and
-      includes no analytics SDK.
-    </p>
-    <p>
-      Map tiles on the ride route screen are fetched from OpenStreetMap when
-      you open a ride's map and you have a connection. That request reaches
-      OpenStreetMap's servers and, like any web request, carries your IP address
-      and the tiles you asked for. It contains nothing else about you, and no
-      part of your ride is sent with it. OpenStreetMap's own policy is at
-      <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy">wiki.osmfoundation.org/wiki/Privacy_Policy</a>.
-    </p>
+
+    <p>Besides backup and the camera list above, MotoPilot uses the network for the intercom's local audio between two phones on the same hotspot — that audio never leaves the local network and never reaches any server.</p>
+
+    <p>The app contains no advertising, sends no telemetry, and includes no analytics SDK. Nothing you do in the app is measured or reported.</p>
+
+    <p>Map tiles on the ride route screen are fetched from OpenStreetMap when you open a ride's map and you have a connection. That request reaches OpenStreetMap's servers and, like any web request, carries your IP address and the tiles you asked for. It contains nothing else about you, and no part of your ride is sent with it. OpenStreetMap's own policy is at &lt;<a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy&gt;.">https://wiki.osmfoundation.org/wiki/Privacy_Policy&gt;.</a></p>
 
     <h2>Children</h2>
-    <p>
-      MotoPilot is for motorcycle riders and is not directed at children.
-    </p>
+
+    <p>MotoPilot is for motorcycle riders and is not directed at children.</p>
 
     <h2>Changes</h2>
+
     <p>If this policy changes, the date at the top changes with it.</p>
 
     <h2>Contact</h2>
-    <p>
-      Questions about this policy:
-      <a href="mailto:object.masum@gmail.com">object.masum@gmail.com</a>
-    </p>
+
+    <p>Questions about this policy: <strong><a href="mailto:object.masum@gmail.com">object.masum@gmail.com</a></strong></p>
   </div>
 </div>
 
