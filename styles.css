@@ -131,6 +131,22 @@ header {
 
 .btn.ghost:hover { border-color: var(--text); }
 
+/* The store button carries the Play glyph, so it reads as a download rather
+   than another link. The icon inherits the button's text colour, which keeps
+   it correct on the lime fill without a second asset to keep in step. */
+.btn.play {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn.play svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  flex: none;
+}
+
 .badge {
   display: inline-flex;
   align-items: center;
