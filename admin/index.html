@@ -41,6 +41,9 @@
     <button class="rail-btn" data-section="notifications" title="Notifications">
       <svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
     </button>
+    <button class="rail-btn" data-section="stats" title="Statistics">
+      <svg viewBox="0 0 24 24"><path d="M5 19V11M12 19V5M19 19v-6"/></svg>
+    </button>
     <button class="rail-btn" data-section="content" title="App content">
       <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
     </button>
@@ -152,6 +155,57 @@
             who views the source notify every user, so it is not here. Sending
             one needs either the Firebase Console, or a Cloud Function on the
             Blaze plan that watches this same message.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------------- stats -->
+    <section class="panel-section" data-panel="stats" hidden>
+      <div class="stats">
+        <div class="stat lime">
+          <span class="stat-label">Active this week</span>
+          <strong id="st-7">—</strong>
+          <span class="muted small">opened the app in 7 days</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Active this month</span>
+          <strong id="st-30">—</strong>
+          <span class="muted small">opened the app in 30 days</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Total installs</span>
+          <strong id="st-all">—</strong>
+          <span class="muted small">ever reported in</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Backups stored</span>
+          <strong id="st-backups">—</strong>
+          <span class="muted small">riders with a copy</span>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Versions in use</h3>
+          <p class="muted small">
+            Which builds are actually out there, newest first. This is what
+            the minimum version on the Content tab would cut off.
+          </p>
+          <div id="st-versions" class="bars"></div>
+        </div>
+
+        <div class="card">
+          <h3>Languages</h3>
+          <div id="st-locales" class="bars"></div>
+
+          <h3 style="margin-top:24px">What this counts</h3>
+          <p class="muted small">
+            One row per install, written when the app launches: a timestamp, a
+            version number and a language. No location, no bike, no fuel
+            history &mdash; nothing that could say who a rider is. An install
+            that has never had a connection is not in here at all, so treat
+            these as a floor rather than a total.
           </p>
         </div>
       </div>

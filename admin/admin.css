@@ -280,3 +280,14 @@ label.check input { width: auto; margin: 0; }
   .main { padding: 18px 16px 32px; }
   .top h1 { font-size: 24px; }
 }
+
+/* ---------------------------------------------------------------- bars */
+
+.bars { margin-top: 12px; display: flex; flex-direction: column; gap: 9px; }
+
+.bar-row { display: grid; grid-template-columns: 90px 1fr 48px; gap: 10px; align-items: center; }
+.bar-row span { font-size: 13px; color: var(--muted); }
+.bar-row .n { text-align: right; color: var(--text); font-weight: 600; }
+
+.bar-track { height: 9px; border-radius: 5px; background: var(--surface-2); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 5px; background: var(--lime); }

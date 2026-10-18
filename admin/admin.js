@@ -28,6 +28,7 @@ const $ = (id) => document.getElementById(id);
 const SECTIONS = {
   cameras: ['Cameras', 'Every rider downloads these and gets warned about them.'],
   notifications: ['Notifications', 'A message riders see when they next open the app.'],
+  stats: ['Statistics', 'Installs that have reported in. A floor, not a total.'],
   content: ['App content', 'Settings the app reads at launch, changed without a release.'],
 };
 
@@ -83,6 +84,7 @@ onAuthStateChanged(auth, async (user) => {
   startCameras();
   watchNotification();
   watchConfig();
+  watchStats();
 });
 
 // ---------------------------------------------------------------- sections
@@ -314,4 +316,70 @@ function note(id, text) {
 function esc(s) {
   return String(s).replace(/[&<>"']/g, (c) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
+
+
+// -------------------------------------------------------------- statistics
+
+function watchStats() {
+  onValue(ref(db, 'stats/installs'), (snap) => {
+    const rows = Object.values(snap.val() ?? {});
+    const now = Date.now();
+    const DAY = 86400000;
+
+    const within = (days) =>
+      rows.filter((r) => typeof r?.lastSeen === 'number'
+        && now - r.lastSeen <= days * DAY).length;
+
+    $('st-7').textContent = within(7);
+    $('st-30').textContent = within(30);
+    $('st-all').textContent = rows.length;
+
+    bars('st-versions', tally(rows, (r) => r.versionCode ?? 'unknown'), true);
+    bars('st-locales', tally(rows, (r) => r.locale ?? 'unknown'));
+  }, () => {
+    // Denied means this account is not an admin any more, which the rest of
+    // the dashboard will have noticed too.
+    ['st-7', 'st-30', 'st-all'].forEach((id) => { $(id).textContent = '—'; });
+  });
+
+  // Not personal data, just how many riders have a copy stored.
+  onValue(ref(db, 'backups'), (snap) => {
+    const v = snap.val();
+    $('st-backups').textContent = v ? Object.keys(v).length : 0;
+  }, () => { $('st-backups').textContent = '—'; });
+}
+
+function tally(rows, pick) {
+  const counts = new Map();
+  for (const row of rows) {
+    const key = String(pick(row));
+    counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+  return [...counts.entries()];
+}
+
+function bars(id, entries, numericDesc = false) {
+  const host = $(id);
+  host.innerHTML = '';
+  if (!entries.length) {
+    host.innerHTML = '<p class="muted small">Nothing reported yet.</p>';
+    return;
+  }
+
+  // Versions read best newest first; languages by how many use them.
+  entries.sort(numericDesc
+    ? (a, b) => Number(b[0]) - Number(a[0])
+    : (a, b) => b[1] - a[1]);
+
+  const max = Math.max(...entries.map((e) => e[1]));
+  for (const [label, count] of entries) {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML =
+      `<span>${esc(label)}</span>` +
+      `<div class="bar-track"><div class="bar-fill" style="width:${(count / max) * 100}%"></div></div>` +
+      `<span class="n">${count}</span>`;
+    host.appendChild(row);
+  }
 }
