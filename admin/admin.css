@@ -72,6 +72,11 @@ label {
 }
 
 input, select, textarea {
+  /* Native controls — the date picker, its calendar popup, the select arrow —
+     are drawn by the browser in its light palette by default, which on these
+     dark fields renders a white-on-white picker that looks broken and cannot
+     be read. This tells the browser to draw them dark instead. */
+  color-scheme: dark;
   width: 100%;
   margin-top: 6px;
   padding: 10px 12px;
@@ -291,3 +296,14 @@ label.check input { width: auto; margin: 0; }
 
 .bar-track { height: 9px; border-radius: 5px; background: var(--surface-2); overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 5px; background: var(--lime); }
+
+
+/* The date field's calendar button is invisible against a dark field until
+   it is inverted, so there is nothing to click. */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.65;
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
